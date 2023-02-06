@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from dotenv import load_dotenv
 import os
 
-# Pulls in ScrapeOps API Key from .env file
+# Pulls in ScrapeOps API Key and search variables from .env file
 load_dotenv()
 API_KEY = os.getenv("SCRAPEOPS_API_KEY")
 KEYWORDS = "_nkw=" + os.getenv("KEYWORDS").replace(" ", "+")
