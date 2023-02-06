@@ -3,15 +3,25 @@ A web scraper for finding good deals on eBay written in python
 
 ## How To Use
 You need to make a .env file in the directory with an API key from https://scrapeops.io/. 
-This is needed to bypass Cloudflare and signing up gets you 1000 free requests with no credit card. 
-This is what the .env file should have inside of it:
+This proxy service is needed to bypass Cloudflare. Signing up gets you 1000 free requests and doesn't require a credit card. 
+Please reference the "sample env" file in the repo for how to set up yours. Below is a reference to the different item condition codes that eBay uses:
 
-SCRAPEOPS_API_KEY=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx
+https://developer.ebay.com/devzone/finding/callref/enums/conditionIdList.html
 
-As it is, the code searches for "Buy It Now" RTX 3080s under $500. All you need to do is replace the url in scrape.py:
+With the sample env, the code searches for "Buy It Now" RTX 3080s under $500 that have 10GB VRAM and are marked with the 3080 chipset. The minimum needed to make your own search is to replace the keywords, price ranges, and remove the extra filters.
 
-response = requests.get(get_scrapeops_url("https://www.ebay.com/sch/i.html?_from=R40&_nkw=rtx+3080+-amd&_sacat=0&LH_TitleDesc=0&Memory%2520Size=10%2520GB&_fsrp=1&LH_BIN=1&LH_ItemCondition=1000%7C1500%7C2500%7C3000&_udhi=500&LH_PrefLoc=2&_udlo=300&rt=nc&Chipset%252FGPU%2520Model=NVIDIA%2520GeForce%2520RTX%25203080&_dcat=27386"))
+```
+SCRAPEOPS_API_KEY=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+KEYWORDS='electric guitar'
+BUY_IT_NOW=1
+PRICE_MIN=50
+PRICE_MAX=150
+ITEM_CONDITION=1000,1500,1750,2000,2010,2020,2030,2500,2750,3000,4000,5000,6000
+EXTRA_FILTERS=
+```
 
-Be sure to install the requirements first:
-
+Be sure to install the requirements and set up your .env first, then run with python:
+```
 pip install -r requirements.txt
+python scrape.py
+```
