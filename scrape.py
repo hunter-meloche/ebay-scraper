@@ -13,12 +13,14 @@ ITEM_CONDITION = "LH_ItemCondition=" + os.environ['ITEM_CONDITION'].replace(",",
 EXTRA_FILTERS = os.environ['EXTRA_FILTERS']
 
 # Create a Secrets Manager client
-secrets_client = boto3.client('secretsmanager')
+secret_name = "dev/ebayScraper/SCRAPEOPS_API_KEY"
+region_name = "us-east-1"
+session = boto3.session.Session()
+client = session.client(service_name='secretsmanager', region_name=region_name)
 
 # Get the ScrapeOps API key from Secrets Manager
-response = secrets_client.get_secret_value("SCRAPEOPS_API_KEY")
-secrets = response['SecretString']
-API_KEY = secrets['SCRAPEOPS_API_KEY']
+get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+API_KEY = get_secret_value_response['SecretString']
 
 # Sends the GET request with Cloudflare bypass
 def get_scrapeops_url(url):
