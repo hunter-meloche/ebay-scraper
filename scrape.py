@@ -1,18 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlencode
-from dotenv import load_dotenv
 import os
 
-# Pulls in ScrapeOps API Key and search variables from .env file
-load_dotenv()
-API_KEY = os.getenv("SCRAPEOPS_API_KEY")
-KEYWORDS = "_nkw=" + os.getenv("KEYWORDS").replace(" ", "+")
-BUY_IT_NOW = "LH_BIN=" + os.getenv("BUY_IT_NOW")
-PRICE_MIN = "_udlo" + os.getenv("PRICE_MIN")
-PRICE_MAX = "_udhi=" + os.getenv("PRICE_MAX")
-ITEM_CONDITION = "LH_ItemCondition=" + os.getenv("ITEM_CONDITION").replace(",", "|")
-EXTRA_FILTERS = os.getenv("EXTRA_FILTERS")
+# Pulls in ScrapeOps API Key and search variables from environment variables
+API_KEY = os.environ['SCRAPEOPS_API_KEY']
+KEYWORDS = "_nkw=" + os.environ['KEYWORDS'].replace(" ", "+")
+BUY_IT_NOW = "LH_BIN=" + os.environ['BUY_IT_NOW']
+PRICE_MIN = "_udlo" + os.environ['PRICE_MIN']
+PRICE_MAX = "_udhi=" + os.environ['PRICE_MAX']
+ITEM_CONDITION = "LH_ItemCondition=" + os.environ['ITEM_CONDITION'].replace(",", "|")
+EXTRA_FILTERS = os.environ['EXTRA_FILTERS']
 
 # Sends the GET request with Cloudflare bypass
 def get_scrapeops_url(url):
