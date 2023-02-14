@@ -2,15 +2,23 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlencode
 import os
+import boto3
 
-# Pulls in ScrapeOps API Key and search variables from environment variables
-API_KEY = os.environ['SCRAPEOPS_API_KEY']
+# Pulls eBay search variables from environment variables
 KEYWORDS = "_nkw=" + os.environ['KEYWORDS'].replace(" ", "+")
 BUY_IT_NOW = "LH_BIN=" + os.environ['BUY_IT_NOW']
 PRICE_MIN = "_udlo" + os.environ['PRICE_MIN']
 PRICE_MAX = "_udhi=" + os.environ['PRICE_MAX']
 ITEM_CONDITION = "LH_ItemCondition=" + os.environ['ITEM_CONDITION'].replace(",", "|")
 EXTRA_FILTERS = os.environ['EXTRA_FILTERS']
+
+# Create a Secrets Manager client
+secrets_client = boto3.client('secretsmanager')
+
+# Get the ScrapeOps API key from Secrets Manager
+response = secrets_client.get_secret_value("SCRAPEOPS_API_KEY")
+secrets = response['SecretString']
+API_KEY = secrets['SCRAPEOPS_API_KEY']
 
 # Sends the GET request with Cloudflare bypass
 def get_scrapeops_url(url):
