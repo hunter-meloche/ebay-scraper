@@ -6,19 +6,25 @@ import boto3
 import json
 
 def lambda_handler(event,context):
-    # Pulls eBay search variables from environment variables
-    KEYWORDS = "_nkw=" + os.environ['KEYWORDS'].replace(" ", "+")
-    BUY_IT_NOW = "LH_BIN=" + os.environ['BUY_IT_NOW']
-    PRICE_MIN = "_udlo" + os.environ['PRICE_MIN']
-    PRICE_MAX = "_udhi=" + os.environ['PRICE_MAX']
-    ITEM_CONDITION = "LH_ItemCondition=" + os.environ['ITEM_CONDITION'].replace(",", "|")
-    EXTRA_FILTERS = os.environ['EXTRA_FILTERS']
+    # Pulls eBay search variables from event variables
+    KEYWORDS = "_nkw=" + event['KEYWORDS'].replace(" ", "+")
+    BUY_IT_NOW = "LH_BIN=" + event['BUY_IT_NOW']
+    PRICE_MIN = "_udlo=" + event['PRICE_MIN']
+    PRICE_MAX = "_udhi=" + event['PRICE_MAX']
+    ITEM_CONDITION = "LH_ItemCondition=" + event['ITEM_CONDITION'].replace(",", "|")
+    EXTRA_FILTERS = event['EXTRA_FILTERS']
 
     # Create a Secrets Manager client
     secret_name = "dev/ebayScraper/SCRAPEOPS_API_KEY"
     region_name = "us-east-1"
     session = boto3.session.Session()
     client = session.client(service_name='secretsmanager', region_name=region_name)
+
+    # Construct URL with event variables
+    url = f"https://www.ebay.com/sch/i.html?{KEYWORDS}" + \
+          f"&{BUY_IT_NOW}&{PRICE_MIN}&{PRICE_MAX}" + \
+          f"&{ITEM_CONDITION}&{EXTRA_FILTERS}"
+    print(url)
 
     # Get the ScrapeOps API key from Secrets Manager
     get_secret_value_response = client.get_secret_value(SecretId=secret_name)
@@ -29,14 +35,10 @@ def lambda_handler(event,context):
     def get_scrapeops_url(url):
         payload = {'api_key': API_KEY, 'url': url, 'bypass': 'cloudflare'}
         proxy_url = 'https://proxy.scrapeops.io/v1/?' + urlencode(payload)
-        print(f"{proxy_url}")
         return proxy_url
 
     # Make a GET request to the URL
-    response = requests.get(get_scrapeops_url( \
-        f"https://www.ebay.com/sch/i.html?{KEYWORDS}" + \
-        f"&{BUY_IT_NOW}&{PRICE_MIN}&{PRICE_MAX}" + \
-        f"&{ITEM_CONDITION}&{EXTRA_FILTERS}"))
+    response = requests.get(get_scrapeops_url(url))
 
     # Parse the HTML content of the page
     soup = BeautifulSoup(response.text, "html.parser")
