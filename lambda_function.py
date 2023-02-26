@@ -8,6 +8,7 @@ import re
 from datetime import datetime
 
 def lambda_handler(event,context):
+
     # Pulls eBay search variables from event variables
     KEYWORDS = event['KEYWORDS'].replace(" ", "+")
     urlKeywords = "_nkw=" + KEYWORDS
@@ -25,7 +26,7 @@ def lambda_handler(event,context):
     url = f"https://www.ebay.com/sch/i.html?{urlKeywords}" + \
           f"&{urlBuyItNow}&{urlPriceMin}&{urlPriceMax}" + \
           f"&{urlItemCondition}&{EXTRA_FILTERS}"
-    print(url)
+    print(f"Search URL:\n{url}\n\n")
 
     # Create a Secrets Manager client
     region_name = "us-east-1"
@@ -35,18 +36,17 @@ def lambda_handler(event,context):
 
     # Get the ScrapeOps API key from Secrets Manager
     get_secret_value_response = secrets_client.get_secret_value(\
-        SecretId="dev/ebayScraper/SCRAPEOPS_API_KEY")
+        SecretId="/dev/ebayScraper/SCRAPEOPS_API_KEY")
     secrets_dict = json.loads(get_secret_value_response["SecretString"])
     API_KEY = secrets_dict["SCRAPEOPS_API_KEY"]
 
     # Get the RDS instance endpoint and credentials from Secrets Manager
     get_secret_value_response = secrets_client.get_secret_value(\
-        SecretId="dev/ebay_scraper/postgres_creds")
+        SecretId="dev/ebay-scraper/postgres")
     secrets_dict = json.loads(get_secret_value_response['SecretString'])
     db_host = secrets_dict['host']
     db_user = secrets_dict['username']
     db_password = secrets_dict['password']
-    print(db_user)
 
     # connect to the database
     try:
@@ -125,14 +125,17 @@ def lambda_handler(event,context):
         try:
             cursor.execute(insert_query, entry)
         except (Exception, psycopg2.Error) as error:
-            print("Error inserting data into PostgreSQL table", error)
+            print(f"Error inserting data into PostgreSQL table: {error}\n\n")
+            conn.rollback()
+            continue
+        else:
+            conn.commit()
 
         # Prints the title, price, and link for logging
         print(f"Title: {title} | Price: {price} \nURL: {link} \n\n")
 
     # Closes the DB connection if it is still open
     if (conn):
-        conn.commit()
         cursor.close()
         conn.close()
         print("PostgreSQL connection is closed")
