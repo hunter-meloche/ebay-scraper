@@ -11,7 +11,7 @@ pip install -r requirements.txt --target=lambda
 ```
 You also need to manually install psycopg2 into the same lambda directory. Simply copy and paste the psycopg2-3.9 directory inside of the lambda directory. https://github.com/jkehler/awslambda-psycopg2
 
-You can use [these Terraform scripts](https://github.com/hunter-meloche/infra-ebay-scraper) to automate the rest of the infrastructure setup until the database needs to be provisioned. Or you may continue to follow along here. If you don't know what Terraform is, just ignore this.
+You can use [these Terraform scripts](https://github.com/hunter-meloche/infra-ebay-scraper) to automate the Lambda function infrastructure setup. Or you may continue to follow along here. If you don't know what Terraform is, just ignore this.
 
 Zip the contents of the lambda directory and upload the zip file to a Python 3.9 Lambda function.
 
