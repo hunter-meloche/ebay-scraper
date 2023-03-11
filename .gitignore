@@ -1,3 +1,6 @@
 .env
 ebay-scraper/
 lambdaPackage/
+awslambda-psycopg2/
+function.zip
+
