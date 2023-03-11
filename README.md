@@ -5,15 +5,7 @@ An AWS Lambda web scraper for finding good deals on eBay written in Python.
 Every hour, a search for an RTX 3080 under $500 is performed. Any new listings are stored in a PostgreSQL RDS database for future analysis.
 
 ## Setup
-You need to install the dependencies into the lambda directory inside of the repo.
-```
-pip install -r requirements.txt --target=lambda
-```
-You also need to manually install psycopg2 into the same lambda directory. Simply copy and paste the psycopg2-3.9 directory inside of the lambda directory. https://github.com/jkehler/awslambda-psycopg2
-
-You can use [these Terraform scripts](https://github.com/hunter-meloche/infra-ebay-scraper) to automate the Lambda function infrastructure setup. Or you may continue to follow along here. If you don't know what Terraform is, just ignore this.
-
-Zip the contents of the lambda directory and upload the zip file to a Python 3.9 Lambda function.
+Run build.sh and upload the produced function.zip file to a Python 3.9 x86 Lambda function.
 
 You also need a [ScrapeOps API key](https://scrapeops.io/) to bypass Cloudflare. Store your API key in AWS Secrets Manager under the key name "dev/ebayScraper/SCRAPEOPS_API_KEY".
 
