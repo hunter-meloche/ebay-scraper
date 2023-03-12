@@ -18,5 +18,6 @@ fi
 mkdir lambda/psycopg2
 cp -pr awslambda-psycopg2/psycopg2-3.9/* lambda/psycopg2/
 
+# Zips lambda_function.py and its dependencies
 cd lambda
 zip -r ../function.zip .
