@@ -36,13 +36,13 @@ def lambda_handler(event,context):
 
     # Get the ScrapeOps API key from Secrets Manager
     get_secret_value_response = secrets_client.get_secret_value(\
-        SecretId="/dev/ebayScraper/SCRAPEOPS_API_KEY")
+        SecretId="dev/ebay-scraper-tf/SCRAPEOPS_API_KEY")
     secrets_dict = json.loads(get_secret_value_response["SecretString"])
     API_KEY = secrets_dict["SCRAPEOPS_API_KEY"]
 
     # Get the RDS instance endpoint and credentials from Secrets Manager
     get_secret_value_response = secrets_client.get_secret_value(\
-        SecretId="dev/ebay-scraper/postgres")
+        SecretId="dev/ebay-scraper-tf/postgres")
     secrets_dict = json.loads(get_secret_value_response['SecretString'])
     db_host = secrets_dict['host']
     db_user = secrets_dict['username']
