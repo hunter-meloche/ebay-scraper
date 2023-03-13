@@ -24,8 +24,10 @@ You can use [infra-ebay-scraper](https://github.com/hunter-meloche/infra-ebay-sc
 
 Run build.sh and upload the produced function.zip file to a Python 3.9 x86 Lambda function. Credit to https://github.com/jkehler/awslambda-psycopg2 for the Lambda-compatible version of psycopg2.
 
-You must also create a PostgreSQL RDS databse and store the connection info in Secrets Manager under the key name "dev/ebay-scraper/postgres". The RDS needs the following database name, "ebay_listings" and a table within it called, "listings". The listings table columns can be created with the following pgAdmin4 CREATE script.
+You must also create a PostgreSQL RDS databse and store the connection info in AWS Secrets Manager under the key name "dev/ebay-scraper-tf/postgres". The RDS needs the following database name, "ebay_listings" and a table within it called, "listings". The listings table columns can be created with the following SQL script.
 ```
+-- Table: public.listings
+
 CREATE TABLE IF NOT EXISTS public.listings
 (
     "itemId" bigint NOT NULL,
@@ -39,6 +41,13 @@ CREATE TABLE IF NOT EXISTS public.listings
     "itemCondition" text COLLATE pg_catalog."default",
     "extraFilters" text COLLATE pg_catalog."default",
     "dateTime" timestamp with time zone NOT NULL,
+    ignore boolean DEFAULT false,
+    "ignoreReason" text COLLATE pg_catalog."default",
     CONSTRAINT listings_pkey PRIMARY KEY ("itemId")
 )
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.listings
+    OWNER to postgres;
 ```
