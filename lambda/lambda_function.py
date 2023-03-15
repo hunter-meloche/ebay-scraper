@@ -102,7 +102,7 @@ def lambda_handler(event,context):
         if itemPrice:
             itemPrice = itemPrice.text.replace("$", "")
         else:
-            Print("Unable to find item price for this listing; skipping")
+            Print(f"Unable to find item price for this listing; skipping - {link}")
             continue
 
         # Finds shipping price of the listing
@@ -141,7 +141,7 @@ def lambda_handler(event,context):
             listingId = listingMatch.group(1)
             print(listingId)
         else:
-            print("Unable to find listing ID in link; skipping")
+            print(f"Unable to find listing ID in link; skipping - {link}")
             continue
 
         # Generates a timestamp for when the listing was found
@@ -166,7 +166,7 @@ def lambda_handler(event,context):
             conn.commit()
 
         # Prints the title, price, and link for logging
-        print(f"Title: {title} | Price: {totalPrice} \nURL: {link} \n\n")
+        print(f"INSERTED:\nTitle: {title} | Price: {totalPrice} \nURL: {link} \n\n")
 
     # Closes the DB connection if it is still open
     if (conn):
