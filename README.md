@@ -30,9 +30,13 @@ You must also create a PostgreSQL RDS databse and store the connection info in A
 
 CREATE TABLE IF NOT EXISTS public.listings
 (
-    "itemId" bigint NOT NULL,
+    "listingId" bigint NOT NULL,
     "listingName" text COLLATE pg_catalog."default" NOT NULL,
-    price numeric NOT NULL,
+    "totalPrice" numeric NOT NULL,
+    "itemPrice" numeric NOT NULL,
+    "shippingPrice" numeric NOT NULL,
+    "sellerScore" numeric NOT NULL,
+    "sellerPercent" numeric NOT NULL,
     link text COLLATE pg_catalog."default" NOT NULL,
     keywords text COLLATE pg_catalog."default" NOT NULL,
     "buyItNow" boolean,
@@ -43,11 +47,6 @@ CREATE TABLE IF NOT EXISTS public.listings
     "dateTime" timestamp with time zone NOT NULL,
     ignore boolean DEFAULT false,
     "ignoreReason" text COLLATE pg_catalog."default",
-    CONSTRAINT listings_pkey PRIMARY KEY ("itemId")
+    CONSTRAINT listings_pkey PRIMARY KEY ("listingId")
 )
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.listings
-    OWNER to postgres;
 ```
