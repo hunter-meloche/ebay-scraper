@@ -137,7 +137,7 @@ def lambda_handler(event,context):
 
         # Generates primary key from item ID in listing link
         listingMatch = re.search(r"/(\d+)\?", link)
-        if match:
+        if listingMatch:
             listingId = listingMatch.group(1)
             print(itemId)
         else:
