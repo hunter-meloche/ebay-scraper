@@ -61,10 +61,10 @@ def lambda_handler(event,context):
 
     # Define the SQL query to insert data into the table
     insert_query = """INSERT INTO listings 
-        ("itemId", "listingName", "price", "link", "keywords", 
-        "buyItNow", "priceMin", "priceMax", "itemCondition", 
-        "extraFilters", "dateTime") VALUES 
-        (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        ("listingId", "listingName", "totalPrice", "itemPrice", "shippingPrice", 
+        "sellerScore", "sellerPercent", "link", "keywords", "buyItNow", 
+        "priceMin", "priceMax", "itemCondition", "extraFilters", "dateTime") 
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
     # Create cursor object to insert into DB
     cursor = conn.cursor()
@@ -98,28 +98,62 @@ def lambda_handler(event,context):
             title = title.text
 
         # Finds the price of the listing
-        price = listing.find("span", class_="s-item__price")
-        if price is None:
+        itemPrice = listing.find("span", class_="s-item__price")
+        if itemPrice:
+            itemPrice = itemPrice.text.replace("$", "")
+        else:
+            Print(f"Unable to find item price for this listing; skipping - {link}")
             continue
-        else:
-            price = price.text
 
-        # Generates primary key from item ID in listing link
-        match = re.search(r"/(\d+)\?", link)
-        if match:
-            itemId = match.group(1)
-            print(itemId)
+        # Finds shipping price of the listing
+        shipping = listing.find("span", class_="s-item__shipping s-item__logisticsCost")
+        if shipping: # Case for regular shipping
+            if shipping.text == "Free shipping":
+                shippingPrice = 0
+            else:
+                shippingMatch = re.search(r"\$(\d+(?:\.\d{1,2})?)", shipping.text)
+                if shippingMatch:
+                    shippingPrice = shippingMatch.group(1)
+                else:
+                    print(f"Unable to find shipping info for listing; skipping - {link}")
+                    continue
         else:
-            print("Unable to find item ID in link; skipping")
+            shipping = listing.find("span", class_="s-item__dynamic s-item__freeXDays")
+            if shipping: # Case for free+fast shipping
+                shippingPrice = 0
+            else:
+                print(f"Unable to find shipping info for listing; skipping - {link}")
+                continue
+
+        # Finds seller rating
+        sellerInfo = listing.find("span", class_="s-item__seller-info-text")
+        sellerMatch = re.search(r"([\w\d]+)\s\(((?:\d{1,3},)*\d{1,3})\)\s(\d+(?:\.\d+)?)%", sellerInfo.text)
+        if sellerMatch:
+            sellerScore = int(sellerMatch.group(2).replace(",", ""))
+            sellerPercent = float(sellerMatch.group(3))
+        else:
+            print(f"Unable to find seller info for listing; skipping - {link}")
+            continue
+
+        # Generates primary key from listing ID in link
+        listingMatch = re.search(r"/(\d+)\?", link)
+        if listingMatch:
+            listingId = listingMatch.group(1)
+            print(listingId)
+        else:
+            print(f"Unable to find listing ID in link; skipping - {link}")
             continue
 
         # Generates a timestamp for when the listing was found
         timestamp = datetime.now()
 
+        # Calculates total price by adding shipping cost to item price
+        totalPrice = float(itemPrice) + float(shippingPrice)
+
         # Compiles the listing data to be inserted to the database
-        entry = (int(itemId), title, price.replace("$", ""), link, \
-            KEYWORDS, bool(int(BUY_IT_NOW)), PRICE_MIN, PRICE_MAX, \
-            ITEM_CONDITION, EXTRA_FILTERS, timestamp)
+        entry = (int(listingId), title, totalPrice, itemPrice, shippingPrice, \
+            sellerScore, sellerPercent, link, KEYWORDS, bool(int(BUY_IT_NOW)), \
+            PRICE_MIN, PRICE_MAX, ITEM_CONDITION, EXTRA_FILTERS, timestamp)
 
         # Inserts a new entry for this listing into the database
         try:
@@ -132,7 +166,7 @@ def lambda_handler(event,context):
             conn.commit()
 
         # Prints the title, price, and link for logging
-        print(f"Title: {title} | Price: {price} \nURL: {link} \n\n")
+        print(f"INSERTED:\nTitle: {title} | Price: {totalPrice} \nURL: {link} \n\n")
 
     # Closes the DB connection if it is still open
     if (conn):
