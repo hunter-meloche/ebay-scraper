@@ -135,13 +135,13 @@ def lambda_handler(event,context):
             print("Unable to find seller info for listing; skipping")
             continue
 
-        # Generates primary key from item ID in listing link
+        # Generates primary key from listing ID in link
         listingMatch = re.search(r"/(\d+)\?", link)
         if listingMatch:
             listingId = listingMatch.group(1)
-            print(itemId)
+            print(listingId)
         else:
-            print("Unable to find item ID in link; skipping")
+            print("Unable to find listing ID in link; skipping")
             continue
 
         # Generates a timestamp for when the listing was found
