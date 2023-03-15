@@ -115,7 +115,7 @@ def lambda_handler(event,context):
                 if shippingMatch:
                     shippingPrice = shippingMatch.group(1)
                 else:
-                    print("Unable to find shipping info for listing; skipping")
+                    print(f"Unable to find shipping info for listing; skipping - {link}")
                     continue
         else:
             shipping = listing.find("span", class_="s-item__dynamic s-item__freeXDays")
