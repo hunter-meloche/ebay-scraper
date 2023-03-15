@@ -62,7 +62,7 @@ def lambda_handler(event,context):
     # Define the SQL query to insert data into the table
     insert_query = """INSERT INTO listings 
         ("listingId", "listingName", "totalPrice", "itemPrice", "shippingPrice", 
-        "sellerScore", sellerPercent", "link", "keywords", "buyItNow", 
+        "sellerScore", "sellerPercent", "link", "keywords", "buyItNow", 
         "priceMin", "priceMax", "itemCondition", "extraFilters", "dateTime") 
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
@@ -102,7 +102,7 @@ def lambda_handler(event,context):
         if itemPrice:
             itemPrice = itemPrice.text.replace("$", "")
         else:
-            Print("Unable to find item price ofr this listing; skipping")
+            Print("Unable to find item price for this listing; skipping")
             continue
 
         # Finds shipping price of the listing
@@ -122,7 +122,7 @@ def lambda_handler(event,context):
             if shipping: # Case for free+fast shipping
                 shippingPrice = 0
             else:
-                print("Unable to find shipping info for listing; skipping")
+                print(f"Unable to find shipping info for listing; skipping - {link}")
                 continue
 
         # Finds seller rating
