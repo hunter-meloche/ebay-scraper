@@ -108,10 +108,10 @@ def lambda_handler(event,context):
         # Finds shipping price of the listing
         shipping = listing.find("span", class_="s-item__shipping s-item__logisticsCost")
         if shipping: # Case for regular shipping
-            if shipping == "Free shipping":
+            if shipping.text == "Free shipping":
                 shippingPrice = 0
             else:
-                shippingMatch = re.search(r"\$(\d+(?:\.\d{1,2})?)", shipping)
+                shippingMatch = re.search(r"\$(\d+(?:\.\d{1,2})?)", shipping.text)
                 if shippingMatch:
                     shippingPrice = shippingMatch.group(1)
                 else:
@@ -127,7 +127,7 @@ def lambda_handler(event,context):
 
         # Finds seller rating
         sellerInfo = listing.find("span", class_="s-item__seller-info-text")
-        sellerMatch = re.search(r"\((\d+)\) (\d+(\.\d+)?)%", sellerInfo)
+        sellerMatch = re.search(r"\((\d+)\) (\d+(\.\d+)?)%", sellerInfo.text)
         if sellerMatch:
             sellerScore = int(sellerMatch.group(1))
             sellerPercent = float(sellerMatch.group(2))
