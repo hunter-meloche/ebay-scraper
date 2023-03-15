@@ -127,7 +127,7 @@ def lambda_handler(event,context):
 
         # Finds seller rating
         sellerInfo = listing.find("span", class_="s-item__seller-info-text")
-        sellerMatch = re.search(r"(\w+)\s\((\d+)\)\s(\d+(?:\.\d+)?)%", sellerInfo.text)
+        sellerMatch = re.search(r"([\w\d]+)\s\((\d+)\)\s(\d+(?:\.\d+)?)%", sellerInfo.text)
         if sellerMatch:
             sellerScore = int(sellerMatch.group(1))
             sellerPercent = float(sellerMatch.group(2))
