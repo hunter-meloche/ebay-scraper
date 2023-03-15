@@ -166,7 +166,7 @@ def lambda_handler(event,context):
             conn.commit()
 
         # Prints the title, price, and link for logging
-        print(f"Title: {title} | Price: {price} \nURL: {link} \n\n")
+        print(f"Title: {title} | Price: {totalPrice} \nURL: {link} \n\n")
 
     # Closes the DB connection if it is still open
     if (conn):
