@@ -132,7 +132,7 @@ def lambda_handler(event,context):
             sellerScore = int(sellerMatch.group(1))
             sellerPercent = float(sellerMatch.group(2))
         else:
-            print("Unable to find seller info for listing; skipping")
+            print(f"Unable to find seller info for listing; skipping - {link}")
             continue
 
         # Generates primary key from listing ID in link
