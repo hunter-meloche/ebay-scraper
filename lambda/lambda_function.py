@@ -129,7 +129,7 @@ def lambda_handler(event,context):
         sellerInfo = listing.find("span", class_="s-item__seller-info-text")
         sellerMatch = re.search(r"([\w\d]+)\s\((\d+)\)\s(\d+(?:\.\d+)?)%", sellerInfo.text)
         if sellerMatch:
-            sellerScore = int(sellerMatch.group(2))
+            sellerScore = int(sellerMatch.group(2).replace(",", ""))
             sellerPercent = float(sellerMatch.group(3))
         else:
             print(f"Unable to find seller info for listing; skipping - {link}")
