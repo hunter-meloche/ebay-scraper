@@ -148,7 +148,7 @@ def lambda_handler(event,context):
         timestamp = datetime.now()
 
         # Calculates total price by adding shipping cost to item price
-        totalPrice = itemPrice + shippingPrice
+        totalPrice = float(itemPrice) + float(shippingPrice)
 
         # Compiles the listing data to be inserted to the database
         entry = (int(listingId), title, totalPrice, itemPrice, shippingPrice, \
