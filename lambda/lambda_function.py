@@ -61,11 +61,10 @@ def lambda_handler(event,context):
 
     # Define the SQL query to insert data into the table
     insert_query = """INSERT INTO listings 
-        ("listingId", "listingName", "totalPrice", "itemPrice", 
-        "shippingPrice", "link", "keywords", "buyItNow", 
-        "priceMin", "priceMax", "itemCondition", 
-        "extraFilters", "dateTime") VALUES 
-        (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        ("listingId", "listingName", "totalPrice", "itemPrice", "shippingPrice", 
+        "sellerScore", sellerPercent", "link", "keywords", "buyItNow", 
+        "priceMin", "priceMax", "itemCondition", "extraFilters", "dateTime") 
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
     # Create cursor object to insert into DB
     cursor = conn.cursor()
@@ -130,8 +129,8 @@ def lambda_handler(event,context):
         sellerInfo = listing.find("span", class_="s-item__seller-info-text")
         sellerMatch = re.search(r"\((\d+)\) (\d+(\.\d+)?)%", sellerInfo)
         if sellerMatch:
-            feedback_score = int(sellerMatch.group(1))
-            positive_feedback_percent = float(sellerMatch.group(2))
+            sellerScore = int(sellerMatch.group(1))
+            sellerPercent = float(sellerMatch.group(2))
         else:
             print("Unable to find seller info for listing; skipping")
             continue
@@ -152,9 +151,9 @@ def lambda_handler(event,context):
         totalPrice = itemPrice + shippingPrice
 
         # Compiles the listing data to be inserted to the database
-        entry = (int(listingId), title, itemPrice, link, \
-            KEYWORDS, bool(int(BUY_IT_NOW)), PRICE_MIN, PRICE_MAX, \
-            ITEM_CONDITION, EXTRA_FILTERS, timestamp)
+        entry = (int(listingId), title, totalPrice, itemPrice, shippingPrice, \
+            sellerScore, sellerPercent, link, KEYWORDS, bool(int(BUY_IT_NOW)), \
+            PRICE_MIN, PRICE_MAX, ITEM_CONDITION, EXTRA_FILTERS, timestamp)
 
         # Inserts a new entry for this listing into the database
         try:
