@@ -21,7 +21,7 @@ This example event will perform a search for an RTX 3080 under $500. Any new lis
 [Item condition code reference](https://developer.ebay.com/devzone/finding/callref/enums/conditionIdList.html)
 
 ## Setup
-**You can use [infra-ebay-scraper](https://github.com/hunter-meloche/infra-ebay-scraper) to automate the rest of this process.** If you wish to do the rest manually, continue reading.
+**You can use [infra-ebay-scraper](https://github.com/hunter-meloche/infra-ebay-scraper) to automate this process.** If you wish to do the rest manually, continue reading.
 
 Run build.sh and upload the produced function.zip file to a Python 3.9 x86 Lambda function. Credit to https://github.com/jkehler/awslambda-psycopg2 for the Lambda-compatible version of psycopg2.
 
