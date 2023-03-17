@@ -1,5 +1,5 @@
 # ebay-scraper
-An AWS Lambda web scraper for analyzing item listings on eBay written in Python. ebay-scraper is designed to be automatically run at regular intervals, so I choose to design it for serverless architecture for the sake of money. It only requires a PostgreSQL server to store its findings, but I may change this in the future for additional cost savings.
+An AWS Lambda web scraper for analyzing item listings on eBay written in Python. ebay-scraper is designed to be automatically run at regular intervals, so I chose to design it for serverless architecture for the sake of money. It only requires a PostgreSQL server to store its findings, but I may change this in the future for additional cost savings.
 
 ## Disclaimer
 This is not to be used for commercial purposes or harm eBay. This project is for educational purposes only and not intended to be used in any way to break eBay or Cloudflare's Terms of Service agreements. Web scraping publicly available information is legal where I live, but check your own local laws.
