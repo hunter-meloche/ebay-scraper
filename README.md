@@ -1,5 +1,8 @@
 # ebay-scraper
-An AWS Lambda web scraper for finding good deals on eBay written in Python.
+An AWS Lambda web scraper for analyzing item listings on eBay written in Python.
+
+## Disclaimer
+This is not to be used for commercial purposes or harm eBay. This project is for educational purposes only and not intended to be used in any way to break eBay or Cloudflare's Terms of Service agreements. Web scraping publicly available information is legal where I live, but check your own local laws.
 
 ## Example Usage
 This is an event-driven function. You can feed it test events within the Lamda function's UI or you can use EventBridge to schedule or have events programtically triggered. Below is an example event:
