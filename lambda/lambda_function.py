@@ -34,12 +34,6 @@ def lambda_handler(event,context):
     secrets_client = session.client(service_name='secretsmanager', \
         region_name=region_name)
 
-    # Get the ScrapeOps API key from Secrets Manager
-    get_secret_value_response = secrets_client.get_secret_value(\
-        SecretId="dev/ebay-scraper-tf/SCRAPEOPS_API_KEY")
-    secrets_dict = json.loads(get_secret_value_response["SecretString"])
-    API_KEY = secrets_dict["SCRAPEOPS_API_KEY"]
-
     # Get the RDS instance endpoint and credentials from Secrets Manager
     get_secret_value_response = secrets_client.get_secret_value(\
         SecretId="dev/ebay-scraper-tf/postgres")
@@ -69,14 +63,8 @@ def lambda_handler(event,context):
     # Create cursor object to insert into DB
     cursor = conn.cursor()
 
-    # Sends the GET request with Cloudflare bypass
-    def get_scrapeops_url(url):
-        payload = {'api_key': API_KEY, 'url': url, 'bypass': 'cloudflare'}
-        proxy_url = 'https://proxy.scrapeops.io/v1/?' + urlencode(payload)
-        return proxy_url
-
     # Make a GET request to the URL
-    response = requests.get(get_scrapeops_url(url))
+    response = requests.get(url)
 
     # Parse the HTML content of the page
     soup = BeautifulSoup(response.text, "html.parser")
