@@ -21,7 +21,7 @@ This example event will perform a search for an RTX 3080 under $500. Any new lis
 [Item condition code reference](https://developer.ebay.com/devzone/finding/callref/enums/conditionIdList.html)
 
 ## Setup
-You need a [ScrapeOps API key](https://scrapeops.io/) to bypass Cloudflare. Store your API key in AWS Secrets Manager under the key name "dev/ebay-scraper-tf/SCRAPEOPS_API_KEY".
+You need a [ScrapeOps API key](https://scrapeops.io/). Store your API key in AWS Secrets Manager under the key name "dev/ebay-scraper-tf/SCRAPEOPS_API_KEY".
 
 You can use [infra-ebay-scraper](https://github.com/hunter-meloche/infra-ebay-scraper) to automate the rest of this process. If you wish to do the rest manually, continue reading.
 
