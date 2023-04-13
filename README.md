@@ -7,7 +7,7 @@ This is not to be used for commercial purposes or harm eBay. This project is for
 ## Example Usage
 This is an event-driven function. You can feed it test events within the Lamda function's UI or you can use EventBridge to schedule or have events programtically triggered. Below is an example event:
 
-This example event will perform a search for an RTX 3080 under $500. Any new listings its found are stored in a PostgreSQL RDS database for future analysis.
+This example event will perform a search for an RTX 3080 under $500. Any new listings it's found are stored in a PostgreSQL RDS database for future analysis.
 ```
 {
   "KEYWORDS": "RTX 3080",
